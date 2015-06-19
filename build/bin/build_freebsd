@@ -58,6 +58,7 @@ echo "MALLOC_PRODUCTION=" > ${X_DESTDIR}/../make.conf.${BUILDNAME}
 # Make a src.conf
 echo 'WITHOUT_KERBEROS="YES"' > ${X_DESTDIR}/../src.conf.${BUILDNAME}
 echo 'WITHOUT_KERBEROS_SUPPORT="YES"' >> ${X_DESTDIR}/../src.conf.${BUILDNAME}
+echo 'WITHOUT_TELNET_SSL="YES"' >> ${X_DESTDIR}/../src.conf.${BUILDNAME}
 echo 'WITHOUT_NIS="YES"' >> ${X_DESTDIR}/../src.conf.${BUILDNAME}
 echo 'WITHOUT_NDIS="YES"' >> ${X_DESTDIR}/../src.conf.${BUILDNAME}
 echo 'WITHOUT_IPX="YES"' >> ${X_DESTDIR}/../src.conf.${BUILDNAME}
@@ -108,7 +109,7 @@ while [ "x$1" != "x" ]; do
 
 	# Only set TARGET_CPUTYPE if it's actually set
 	# Always set it for world builds; don't set it for kernel builds
-	X_TARGET_CPUTYPE="TARGET_CPUTYPE=${TARGET_CPUTYPE}"
+	X_TARGET_CPUTYPE="TARGET_CPUTYPE=${TARGET_CPUTYPE} CPUTYPE=${TARGET_CPUTYPE}"
 	if [ "$1" = "buildkernel" -o "$1" = "installkernel" ]; then
 		if [ "x${KERN_NO_TARGET_CPUTYPE}" = "xyes" ]; then
 			X_TARGET_CPUTYPE=""
@@ -125,6 +126,10 @@ while [ "x$1" != "x" ]; do
 	    make -s ${BUILD_FLAGS} DB_FROM_SRC=1		\
 	    TARGET=${TARGET}					\
 	    TARGET_ARCH=${TARGET_ARCH}				\
+	    NO_WERROR=1			\
+	    CROSS_TOOLCHAIN=mips-gcc	\
+	    COMPILER_TYPE=gcc		\
+	    COMPILER_VERSION=40902	\
 	    ${X_TARGET_CPUTYPE}					\
 	    KERNCONF=${KERNCONF}				\
 	    KODIR=/boot/kernel.${KERNCONF}/			\
